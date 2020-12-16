@@ -118,7 +118,7 @@ const DisplayMissions = (state) => {
  * @param {Store} state the current state of Store
  */
 const getMissionDetails = (state) => {
-    const url = new URL(`http://192.168.0.104:3000/roverDetails`);
+    const url = new URL(`http://localhost:3000/roverDetails`);
     url.searchParams.append("name", state.get("selectedRover"));
 
     fetch(url)
