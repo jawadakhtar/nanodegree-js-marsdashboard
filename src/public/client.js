@@ -28,9 +28,8 @@ const updateStore = (state, newState) => {
  * @param {Store} state the current state of Store
  */
 const render = async (root, state) => {
-    const innerhtml = App(state); //generates the application starting UI
-    root.innerHTML = innerhtml;
-    
+    root.innerHTML = App(state); //generates the application starting UI
+        
     //bind the button click events for user intraction to update the store and to query the server to get the selected rover details
     store.get("rovers").map(roverName=> { 
         document.getElementById(`${roverName}Btn`).addEventListener("click",function(e){
@@ -48,7 +47,7 @@ const App = (state) => {
         <h1> Intermediate JavaScript Udacity Nanodegree </h1>
     
         ${Greeting(store.get('user').get('name'))}
-            <h3>NASA MARS MISSIONS</h3>
+            <h2>NASA MARS MISSIONS</h2>
             ${DisplayMissions(state)}
     `;
 
@@ -69,10 +68,10 @@ window.addEventListener('load', () => {
 const showImages = (state, roverImages) => {
     const roverName = state.get("selectedRover");//roverImages.rover;
     document.getElementById(`${roverName}Images`).innerHTML =
-        `<h3>Date on Earth: ${roverImages.earthDate}</h3>` +
-        `<h3>Launch: ${roverImages.launch}</h3>` +
-        `<h3>Landing: ${roverImages.landing}</h3>` +
-        `<h3>Status: ${roverImages.status}</h3>` +  
+    `<h3>Launch: ${roverImages.launch}</h3>` +
+    `<h3>Landing: ${roverImages.landing}</h3>` +
+    `<h3>Status: ${roverImages.status}</h3>` +  
+    `<h3>Photos taken on : ${roverImages.earthDate}</h3>` +
         roverImages.images.map(img => 
             `<img src="${img}" width="400" height="400" /> &nbsp;`
         ).join('');
@@ -119,7 +118,7 @@ const DisplayMissions = (state) => {
  * @param {Store} state the current state of Store
  */
 const getMissionDetails = (state) => {
-    let url = new URL(`http://localhost:3000/roverDetails`);
+    const url = new URL(`http://192.168.0.104:3000/roverDetails`);
     url.searchParams.append("name", state.get("selectedRover"));
 
     fetch(url)
