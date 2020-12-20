@@ -25,13 +25,19 @@ app.get('/roverDetails', async(req, res) => {
         {
             const roverName = req.query.name.toLowerCase(); 
             const sol = Math.round(Math.random() * 1000); //to get different images each time
+
+            if (process.env.API_KEY === 'YOURS_NASA_API_KEY')
+            {
+                console.log('Invalid NASA API KEY. Please set the API Key as per the README.md');
+                return;
+            }
+
             //todo: implement pagination
             const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverName}/photos?sol=${sol}&page=1&api_key=${process.env.API_KEY}`;
-            
             const roverData = await fetch(url)
                                         .then(res => res.json());        
             
-            if(roverData.photos.length === 0)
+            if(roverData.photos === null || roverData.photos.length === 0)
             {
                 attempts++;
                 console.log('No data received from NASA server. Making ' + attempts + " attempt...");
