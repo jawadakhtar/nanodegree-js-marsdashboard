@@ -33,11 +33,15 @@ app.get('/roverDetails', async(req, res) => {
             }
 
             //todo: implement pagination
-            const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverName}/photos?sol=${sol}&page=1&api_key=${process.env.API_KEY}`;
+            var failed = false;
+            const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverName}/latest_photos?api_key=${process.env.API_KEY}`;
             const roverData = await fetch(url)
-                                        .then(res => res.json());        
-            
-            if(roverData.photos === null || roverData.photos.length === 0)
+                                        .then(res => res.json())
+                                        .catch(error => {
+                                            failed = true;                                            
+                                        });
+
+            if(failed === true || roverData.latest_photos === null || roverData.latest_photos.length === 0)
             {
                 attempts++;
                 console.log('No data received from NASA server. Making ' + attempts + " attempt...");
@@ -46,12 +50,12 @@ app.get('/roverDetails', async(req, res) => {
 
             const rovers =
                 {   
-                    rover: roverData.photos.reduce( (acc, crnt) => {return crnt.rover.name;}),
-                    landing: roverData.photos.reduce( (acc, crnt) => {return crnt.rover.landing_date;}),
-                    launch: roverData.photos.reduce( (acc, crnt) => {return crnt.rover.launch_date;}),
-                    status: roverData.photos.reduce( (acc, crnt) => {return crnt.rover.status;}),
-                    earthDate: roverData.photos.reduce( (acc, crnt) => {return crnt.earth_date;}),
-                    images: roverData.photos.map( p => p.img_src)
+                    rover: roverData.latest_photos.reduce( (acc, crnt) => {return crnt.rover.name;}),
+                    landing: roverData.latest_photos.reduce( (acc, crnt) => {return crnt.rover.landing_date;}),
+                    launch: roverData.latest_photos.reduce( (acc, crnt) => {return crnt.rover.launch_date;}),
+                    status: roverData.latest_photos.reduce( (acc, crnt) => {return crnt.rover.status;}),
+                    earthDate: roverData.latest_photos.reduce( (acc, crnt) => {return crnt.earth_date;}),
+                    images: roverData.latest_photos.map( p => p.img_src)
                 };
             
             res.send(rovers);

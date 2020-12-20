@@ -125,5 +125,8 @@ const getMissionDetails = (state) => {
     .then(res => res.json())
     .then(data => {
         showImages(state, data);
+    })
+    .catch(error => {
+        console.log('Error occured in fetching images : ' + error);   
     });
 }
